@@ -8,6 +8,7 @@ import {
 import { Helmet } from "react-helmet-async";
 import { OrderTable } from "./order-table-row";
 import { OrderTableFilters } from "./order-table-filters";
+import { Pagination } from "@/components/pagination";
 
 export function Orders() {
   return (
@@ -15,8 +16,8 @@ export function Orders() {
       <Helmet title="Pedidos" />
       <div className="flex flex-col gap-4">
         <h1 className="text-3xl font-bold tracking-tight">Pedidos</h1>
-      </div>
-      <div>
+      
+      <div className="space-y-2.5">
         <OrderTableFilters />
         <div className="rounded-md border">
           <Table>
@@ -39,6 +40,9 @@ export function Orders() {
             </TableBody>
           </Table>
         </div>
+
+        <Pagination pageIndex={0} totalCount={105} perPage={10}/>
+      </div>
       </div>
     </>
   );

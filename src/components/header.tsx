@@ -16,7 +16,7 @@ export function Header() {
             <HomeIcon className="size-4" />
             Início
           </NavLink>
-          <NavLink to="/pao">
+          <NavLink to="/orders">
             <UtensilsCrossed className="size-4" />
             Pedidos
           </NavLink>

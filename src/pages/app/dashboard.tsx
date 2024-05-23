@@ -5,7 +5,6 @@ export function Dashboard() {
     <div>
       <div>
         <Helmet title="login" />
-        <h1>SingIn</h1>
       </div>
       <h1>Dashboard</h1>
     </div>

@@ -14,7 +14,7 @@ import { getManagedRestaurante } from "@/api/get-managed-restaurant";
 import { Skeleton } from "./ui/skeleton";
 import { Dialog, DialogTrigger } from "./ui/dialog";
 import { StoreProfileDialog } from "./store-profile-dialog";
-import { SingOut } from "@/api/sing-out";
+import { signOut } from "@/api/sign-out";
 import { useNavigate } from "react-router-dom";
 
 export function AccountMenu() {
@@ -32,10 +32,10 @@ export function AccountMenu() {
       staleTime: Infinity,
     });
 
-  const { mutateAsync: singOutFn, isPending: isSiningOut } = useMutation({
-    mutationFn: SingOut,
+  const { mutateAsync: signOutFn, isPending: isSiningOut } = useMutation({
+    mutationFn: signOut,
     onSuccess: () => {
-      navigate("/sing-in", { replace: true });
+      navigate('/sign-in', { replace: true })
     },
   });
 
@@ -85,7 +85,7 @@ export function AccountMenu() {
             className="text-rose-500 dark:text-rose-400"
             disabled={isSiningOut}
           >
-            <button className="w-full" onClick={() => singOutFn()}>
+            <button className="w-full" onClick={() => signOutFn()}>
               <LogOut className="mr-2 size-4" />
               <span>Sair</span>
             </button> 

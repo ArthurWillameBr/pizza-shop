@@ -8,14 +8,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getProfile } from "@/api/get-profile";
 import { getManagedRestaurante } from "@/api/get-managed-restaurant";
 import { Skeleton } from "./ui/skeleton";
 import { Dialog, DialogTrigger } from "./ui/dialog";
 import { StoreProfileDialog } from "./store-profile-dialog";
+import { SingOut } from "@/api/sing-out";
+import { useNavigate } from "react-router-dom";
 
 export function AccountMenu() {
+  const navigate = useNavigate();
+
   const { data: profile, isLoading: isLoadingProfile } = useQuery({
     queryFn: getProfile,
     queryKey: ["profile"],
@@ -27,6 +31,13 @@ export function AccountMenu() {
       queryKey: ["managed-restaurant"],
       staleTime: Infinity,
     });
+
+  const { mutateAsync: singOutFn, isPending: isSiningOut } = useMutation({
+    mutationFn: SingOut,
+    onSuccess: () => {
+      navigate("/sing-in", { replace: true });
+    },
+  });
 
   return (
     <Dialog>
@@ -69,9 +80,15 @@ export function AccountMenu() {
               <span>Perfil da loja</span>
             </DropdownMenuItem>
           </DialogTrigger>
-          <DropdownMenuItem className="text-rose-500 dark:text-rose-400">
-            <LogOut className="mr-2 size-4" />
-            <span>Sair</span>
+          <DropdownMenuItem
+            asChild
+            className="text-rose-500 dark:text-rose-400"
+            disabled={isSiningOut}
+          >
+            <button className="w-full" onClick={() => singOutFn()}>
+              <LogOut className="mr-2 size-4" />
+              <span>Sair</span>
+            </button> 
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

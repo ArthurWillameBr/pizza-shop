@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { registerRestaurant } from "@/api/register-restaurant";
 
 const singUpForm = z.object({
   email: z.string().email(),
@@ -17,7 +19,7 @@ const singUpForm = z.object({
 type SingUpForm = z.infer<typeof singUpForm>;
 
 export function SingUp() {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const {
     register,
@@ -25,15 +27,27 @@ export function SingUp() {
     formState: { isSubmitting },
   } = useForm<SingUpForm>({});
 
+  const { mutateAsync: registerRestaurantFn } = useMutation({
+    mutationFn: registerRestaurant,
+  });
+
   async function handleSingUp(data: SingUpForm) {
-    console.log(data);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    toast.success("Restaurante cadastrado com sucesso.", {
-      action: {
-        label: "Login",
-        onClick: () => navigate("/sing-in"),
-      },
-    });
+    try {
+      await registerRestaurantFn({
+        email: data.email,
+        managerName: data.managerName,
+        phone: data.phone,
+        restaurantName: data.restaurantName,
+      });
+      toast.success("Restaurante cadastrado com sucesso.", {
+        action: {
+          label: "Login",
+          onClick: () => navigate(`/sing-in?email=${data.email}`),
+        },
+      });
+    } catch (error) {
+      toast.error("Erro ao cadastrar restaurante.");
+    }
   }
 
   return (
@@ -85,9 +99,9 @@ export function SingUp() {
               <a className="underline underline-offset-4" href="">
                 termos de política{" "}
               </a>{" "}
-                e{" "}
+              e{" "}
               <a className="underline underline-offset-4" href="">
-               termos de privacidade{" "}
+                termos de privacidade{" "}
               </a>
             </p>
           </form>

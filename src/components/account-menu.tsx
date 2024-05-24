@@ -1,31 +1,77 @@
 import { Building, ChevronDown, LogOut } from "lucide-react";
 import { Button } from "./ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { useQuery } from "@tanstack/react-query";
+import { getProfile } from "@/api/get-profile";
+import { getManagedRestaurante } from "@/api/get-managed-restaurant";
+import { Skeleton } from "./ui/skeleton";
+import { Dialog, DialogTrigger } from "./ui/dialog";
 
 export function AccountMenu() {
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2 select-none">
-                    Pizza Shop
-                    <ChevronDown className="size-4"/>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="flex flex-col">
-                    <span>Arthur Willame</span>
-                    <span className="text-xs font-normal text-muted-foreground">arthurwillame@gmail.com</span>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                    <Building className="size-4 mr-2" />
-                    <span>Perfil da loja</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-rose-500 dark:text-rose-400">
-                    <LogOut className="size-4 mr-2" />
-                    <span>Sair</span>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    )
+  const { data: profile, isLoading: isLoadingProfile } = useQuery({
+    queryFn: getProfile,
+    queryKey: ["profile"],
+  });
+  const { data: managedRestaurant, isLoading: isLoadingManagedRestaurant } =
+    useQuery({
+      queryFn: getManagedRestaurante,
+      queryKey: ["managed-restaurant"],
+    });
+
+  return (
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="outline"
+            className="flex select-none items-center gap-2"
+          >
+            {isLoadingManagedRestaurant ? (
+              <Skeleton className="h-5 w-24" />
+            ) : (
+              managedRestaurant?.name
+            )}
+            <ChevronDown className="size-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuLabel className="flex flex-col">
+            <span>
+              {" "}
+              {isLoadingProfile ? (
+                <Skeleton className="mb-1 h-4 w-32" />
+              ) : (
+                profile?.name
+              )}
+            </span>
+            <span className="text-xs font-normal text-muted-foreground">
+              {isLoadingProfile ? (
+                <Skeleton className="h-3 w-24" />
+              ) : (
+                profile?.email
+              )}
+            </span>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DialogTrigger asChild>
+            <DropdownMenuItem>
+              <Building className="mr-2 size-4" />
+              <span>Perfil da loja</span>
+            </DropdownMenuItem>
+          </DialogTrigger>
+          <DropdownMenuItem className="text-rose-500 dark:text-rose-400">
+            <LogOut className="mr-2 size-4" />
+            <span>Sair</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </Dialog>
+  );
 }

@@ -7,15 +7,15 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { Link, useSearchParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { singIn } from "@/api/singIn";
+import { signIn } from "@/api/sign-in";
 
-const singInForm = z.object({
+const signInForm = z.object({
   email: z.string().email(),
 });
 
-type SingInForm = z.infer<typeof singInForm>;
+type SingInForm = z.infer<typeof signInForm>;
 
-export function SingIn() {
+export function SignIn() {
 
   const [searchParams] = useSearchParams()
 
@@ -30,7 +30,7 @@ export function SingIn() {
   });
 
   const { mutateAsync: authenticate } = useMutation({
-    mutationFn: singIn,
+    mutationFn: signIn,
   });
 
   async function handleSingIn(data: SingInForm) {
@@ -52,7 +52,7 @@ export function SingIn() {
       <Helmet title="login" />
       <div className="p-8">
         <Button variant="outline" asChild className="absolute right-8 top-8">
-          <Link to="/sing-up">Novo estabelecimento</Link>
+          <Link to="/sign-up">Novo estabelecimento</Link>
         </Button>
         <div className="flex w-[350px] flex-col justify-center gap-6 ">
           <div className="flex flex-col gap-2 text-center">

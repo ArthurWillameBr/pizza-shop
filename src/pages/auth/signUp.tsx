@@ -18,7 +18,7 @@ const singUpForm = z.object({
 
 type SingUpForm = z.infer<typeof singUpForm>;
 
-export function SingUp() {
+export function SignUp() {
   const navigate = useNavigate();
 
   const {
@@ -42,7 +42,7 @@ export function SingUp() {
       toast.success("Restaurante cadastrado com sucesso.", {
         action: {
           label: "Login",
-          onClick: () => navigate(`/sing-in?email=${data.email}`),
+          onClick: () => navigate(`/sign-in?email=${data.email}`),
         },
       });
     } catch (error) {
@@ -55,7 +55,7 @@ export function SingUp() {
       <Helmet title="Cadastro" />
       <div className="p-8">
         <Button variant="outline" asChild className="absolute right-8 top-8">
-          <Link to="/sing-in">Fazer login</Link>
+          <Link to="/sign-in">Fazer login</Link>
         </Button>
         <div className="flex w-[350px] flex-col justify-center gap-6 ">
           <div className="flex flex-col gap-2 text-center">

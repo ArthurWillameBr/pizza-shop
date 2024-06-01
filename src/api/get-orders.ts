@@ -13,7 +13,7 @@ export interface GetOrdersProps {
   orders: {
     orderId: string;
     createdAt: string;
-    status: "pending" | "canceled" | "delivering" | "delivered";
+    status: "pending" | "canceled" | "delivering" | "delivered" | "processing";
     customerName: string;
     total: number;
   }[];

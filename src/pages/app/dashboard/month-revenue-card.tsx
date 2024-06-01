@@ -1,7 +1,14 @@
+import { getMonthRevenue } from "@/api/get-month-revenue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuery } from "@tanstack/react-query";
 import { DollarSignIcon } from "lucide-react";
+import { MetricCardSkeleton } from "./metric-card-skeleton";
 
 export function MonthRevenueCard() {
+  const { data: monthRevenue } = useQuery({
+    queryFn: getMonthRevenue,
+    queryKey: ['metrics', 'month-receipt'],
+  });
   return (
     <Card>
       <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
@@ -11,11 +18,30 @@ export function MonthRevenueCard() {
         <DollarSignIcon className="size-4 text-muted-foreground" />
       </CardHeader>
       <CardContent className="space-y-1">
-        <span className="text-2xl font-bold tracking-tight">R$ 1247,00</span>
-        <p className="text-sm text-muted-foreground">
-          <span className="text-emerald-500 dark:text-emerald-400">+2%</span> em
-          relação ao mês anterior
-        </p>
+      {monthRevenue ? (
+          <>
+            <span className="text-2xl font-bold tracking-tight">
+              {(monthRevenue.receipt / 100).toLocaleString("pt-BR", {
+                currency: "BRL",
+                style: "currency",
+              })}
+            </span>
+            <p className="text-sm text-muted-foreground">
+              {monthRevenue.diffFromLastMonth < 0 ? (
+                <span className="text-green-500 dark:text-green-400">
+                  {monthRevenue.diffFromLastMonth}%
+                </span>
+              ) : (
+                <span className="text-rose-500 dark:text-red-400">
+                  +{monthRevenue.diffFromLastMonth}%
+                </span>
+              )}
+              {" "}em relação ao mês passado
+            </p>
+          </>
+        ) : (
+          <MetricCardSkeleton/>
+        )}
       </CardContent>
     </Card>
   );
